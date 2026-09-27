@@ -1,11 +1,11 @@
 // Generated using deadlock-dumper
-// 2026-09-27T10:33:05Z
+// 2026-09-27T15:22:12Z
 
 namespace DeadlockDumper.Schemas {
 
     public static class Engine2Dll {
 
-        // Parent: Ú^Áý
+        // Parent: None
         public static class CEntityInstance {
         }
 
@@ -15,7 +15,6 @@ namespace DeadlockDumper.Schemas {
 
         // Parent: None
         public static class CScriptComponent {
-            public const nint  = 0x0; // CEntityComponent
         }
 
         // Parent: None

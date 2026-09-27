@@ -1,11 +1,11 @@
 // Generated using deadlock-dumper
-// 2026-09-27T10:33:06Z
+// 2026-09-27T15:22:12Z
 
 #![allow(non_upper_case_globals, non_camel_case_types, unused)]
 
 pub mod worldrenderer_dll {
 
-    // Parent: @íÕþ
+    // Parent: None
     pub mod CEntityInstance {
     }
 
@@ -15,7 +15,6 @@ pub mod worldrenderer_dll {
 
     // Parent: None
     pub mod CScriptComponent {
-        pub const : usize = 0x0;
     }
 
     // Parent: None

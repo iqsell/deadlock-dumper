@@ -6,15 +6,12 @@
         },
         "CParticleBindingRealPulse": {
             "fields": {
-                "": 0,
                 "CParticleBindingRealPulse": 312
             },
             "parent": ""
         },
         "CParticleCollectionBindingInstance": {
-            "fields": {
-                "": 0
-            },
+            "fields": {},
             "parent": ""
         },
         "CPulseArraylib": {
@@ -26,14 +23,11 @@
             "parent": "m_StartTime"
         },
         "CPulseCell_BaseFlow": {
-            "fields": {
-                "": -1210118656
-            },
+            "fields": {},
             "parent": ""
         },
         "CPulseCell_BaseLerp": {
             "fields": {
-                "": -1210117024,
                 "pulse_runtime_lib": 262655
             },
             "parent": ""
@@ -43,122 +37,99 @@
             "parent": ""
         },
         "CPulseCell_BaseRequirement": {
-            "fields": {
-                "": -1210118528
-            },
+            "fields": {},
             "parent": ""
         },
         "CPulseCell_BaseState": {
             "fields": {
-                "": -1210107712,
                 "pulse_runtime_lib": 262655
             },
-            "parent": "�\u0013߷�"
+            "parent": ""
         },
         "CPulseCell_BaseValue": {
-            "fields": {
-                "": -1210116560
-            },
-            "parent": "�Pw\u001f�"
+            "fields": {},
+            "parent": ""
         },
         "CPulseCell_BaseYieldingInflow": {
             "fields": {
-                "": -1210117184,
                 "pulse_runtime_lib": 197119
             },
-            "parent": "�Pw\u001f�"
+            "parent": ""
         },
         "CPulseCell_BooleanSwitchState": {
             "fields": {
-                "": -1210107424,
-                "pulse_runtime_lib": 327944,
-                "�Pw\u001f�": -1212645808
+                "pulse_runtime_lib": 327944
             },
-            "parent": "{ className = 'IsStateNode' item_factory = 'BooleanSwitchState' }"
+            "parent": ""
         },
         "CPulseCell_CursorQueue": {
             "fields": {
-                "": 0,
-                "CPulseCell_CursorQueue": 160,
-                "�Lw\u001f�": 262497
+                "CPulseCell_CursorQueue": 160
             },
             "parent": "tools/images/pulse_editor/cursor_wait_zone.png"
         },
         "CPulseCell_FireCursors": {
             "fields": {
-                "": -1210111440,
                 "pulse_runtime_lib": 262408
             },
             "parent": ""
         },
         "CPulseCell_Inflow_BaseEntrypoint": {
             "fields": {
-                "": -1210118336,
                 "pulse_runtime_lib": 196872
             },
             "parent": ""
         },
         "CPulseCell_Inflow_EntOutputHandler": {
             "fields": {
-                "": -1210117504,
                 "pulse_runtime_lib": 262408
             },
             "parent": ""
         },
         "CPulseCell_Inflow_EventHandler": {
             "fields": {
-                "": -1210117888,
                 "pulse_runtime_lib": 262408
             },
             "parent": ""
         },
         "CPulseCell_Inflow_GraphHook": {
             "fields": {
-                "": -1210117728,
                 "pulse_runtime_lib": 262408
             },
             "parent": ""
         },
         "CPulseCell_Inflow_Method": {
             "fields": {
-                "": -1210118048,
                 "pulse_runtime_lib": 262408
             },
             "parent": ""
         },
         "CPulseCell_Inflow_ObservableVariableListener": {
             "fields": {
-                "": -1210117312,
                 "pulse_runtime_lib": 262408
             },
             "parent": ""
         },
         "CPulseCell_Inflow_Wait": {
             "fields": {
-                "": 0,
-                "\u0018j̷�": 0,
                 "CPulseCell_Inflow_Wait": 144
             },
             "parent": "tools/images/pulse_editor/inflow_wait.png"
         },
         "CPulseCell_Inflow_Yield": {
             "fields": {
-                "": 0,
-                "CPulseCell_Inflow_Yield": 144,
-                "�j̷�": 0
+                "CPulseCell_Inflow_Yield": 144
             },
             "parent": ""
         },
         "CPulseCell_InlineNodeSkipSelector": {
             "fields": {
-                "": -1210155680,
                 "pulse_runtime_lib": 196872
             },
             "parent": ""
         },
         "CPulseCell_IntervalTimer": {
             "fields": {
-                "": -1210109888,
                 "pulse_runtime_lib": 262408
             },
             "parent": "tools/images/pulse_editor/node_timer.png"
@@ -169,7 +140,6 @@
         },
         "CPulseCell_IsRequirementValid": {
             "fields": {
-                "": -1210156080,
                 "pulse_runtime_lib": 196872
             },
             "parent": ""
@@ -180,7 +150,6 @@
         },
         "CPulseCell_LimitCount": {
             "fields": {
-                "": -1210156656,
                 "pulse_runtime_lib": 196872
             },
             "parent": "m_nLimitCount"
@@ -195,7 +164,6 @@
         },
         "CPulseCell_Outflow_CycleOrdered": {
             "fields": {
-                "": 0,
                 "CPulseCell_Outflow_CycleOrdered": 96
             },
             "parent": ""
@@ -206,14 +174,12 @@
         },
         "CPulseCell_Outflow_CycleRandom": {
             "fields": {
-                "": -1210120640,
                 "pulse_runtime_lib": 196872
             },
             "parent": ""
         },
         "CPulseCell_Outflow_CycleShuffled": {
             "fields": {
-                "": 0,
                 "CPulseCell_Outflow_CycleShuffled": 96
             },
             "parent": ""
@@ -224,35 +190,30 @@
         },
         "CPulseCell_PickBestOutflowSelector": {
             "fields": {
-                "": -1210157408,
                 "pulse_runtime_lib": 196872
             },
             "parent": "tools/images/pulse_editor/requirements.png"
         },
         "CPulseCell_Step_CallExternalMethod": {
             "fields": {
-                "": -1210119104,
                 "pulse_runtime_lib": 262408
             },
             "parent": ""
         },
         "CPulseCell_Step_DebugLog": {
             "fields": {
-                "": 0,
                 "CPulseCell_Step_DebugLog": 72
             },
             "parent": "pulse_runtime_lib"
         },
         "CPulseCell_Step_PublicOutput": {
             "fields": {
-                "": -1210116400,
                 "pulse_runtime_lib": 196872
             },
             "parent": ""
         },
         "CPulseCell_Timeline": {
             "fields": {
-                "": -1210108576,
                 "pulse_runtime_lib": 262408
             },
             "parent": ""
@@ -262,50 +223,41 @@
             "parent": ""
         },
         "CPulseCell_Unknown": {
-            "fields": {
-                "": -1210118784
-            },
+            "fields": {},
             "parent": ""
         },
         "CPulseCell_Value_Curve": {
             "fields": {
-                "": -1210112416,
                 "pulse_runtime_lib": 196872
             },
-            "parent": "�Mw\u001f�"
+            "parent": ""
         },
         "CPulseCell_Value_Gradient": {
             "fields": {
-                "": -1210111056,
                 "pulse_runtime_lib": 196872
             },
-            "parent": "�Mw\u001f�"
+            "parent": ""
         },
         "CPulseCell_Value_RandomFloat": {
             "fields": {
-                "": -1210119712,
                 "pulse_runtime_lib": 196872
             },
             "parent": "tools/images/pulse_editor/exit_cycle_random.png"
         },
         "CPulseCell_Value_RandomInt": {
             "fields": {
-                "": 0,
                 "CPulseCell_Value_RandomInt": 72
             },
             "parent": "tools/images/pulse_editor/exit_cycle_random.png"
         },
         "CPulseCell_WaitForCursorsWithTag": {
             "fields": {
-                "": -1210105600,
-                "pulse_runtime_lib": 327944,
-                "�Pw\u001f�": -1212628448
+                "pulse_runtime_lib": 327944
             },
             "parent": "tools/images/pulse_editor/cursor_tag.png"
         },
         "CPulseCell_WaitForCursorsWithTagBase": {
             "fields": {
-                "": -1210105984,
                 "pulse_runtime_lib": 262408
             },
             "parent": "m_nCursorsAllowedToWait"
@@ -316,7 +268,6 @@
         },
         "CPulseCell_WaitForObservable": {
             "fields": {
-                "": -1210108016,
                 "pulse_runtime_lib": 262408
             },
             "parent": ""
@@ -358,9 +309,7 @@
             "parent": ""
         },
         "CPulse_ResumePoint": {
-            "fields": {
-                "": 0
-            },
+            "fields": {},
             "parent": ""
         },
         "OutflowWithRequirements_t": {
@@ -384,14 +333,11 @@
             "parent": ""
         },
         "SignatureOutflow_Continue": {
-            "fields": {
-                "": 0
-            },
+            "fields": {},
             "parent": ""
         },
         "SignatureOutflow_Resume": {
             "fields": {
-                "": 0,
                 "SignatureOutflow_Resume": 72
             },
             "parent": ""

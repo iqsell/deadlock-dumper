@@ -16,6 +16,30 @@ static std::string read_str(const Memory& mem, uint64_t ptr, size_t max = 256) {
     return mem.read_string(ptr, max).value_or("");
 }
 
+// All chars printable ASCII, starts with letter or underscore, length reasonable.
+static bool is_valid_name(const std::string& s) {
+    if (s.empty() || s.size() > 256) return false;
+    char fc = s[0];
+    if (!((fc >= 'A' && fc <= 'Z') || (fc >= 'a' && fc <= 'z') || fc == '_'))
+        return false;
+    for (unsigned char c : s)
+        if (c < 0x20 || c > 0x7E) return false;
+    return true;
+}
+
+// Type names may contain *, [], <>, ::, spaces — just check printable ASCII.
+static bool is_valid_type_name(const std::string& s) {
+    if (s.size() > 512) return false;
+    for (unsigned char c : s)
+        if (c < 0x20 || c > 0x7E) return false;
+    return true;
+}
+
+// Struct field offset must be non-negative and within a sane range (< 1 MB).
+static bool is_valid_offset(int32_t off) {
+    return off >= 0 && off <= 0x100000;
+}
+
 // Read a T located at remote address.
 template <typename T>
 static std::optional<T> rread(const Memory& mem, uint64_t addr) {
@@ -51,7 +75,7 @@ static std::map<std::string, uint64_t> read_interface_list(const Memory&   mem,
         if (!reg) break;
 
         const std::string name = read_str(mem, reg->name);
-        if (name.empty()) { ptr = reg->next; continue; }
+        if (!is_valid_name(name)) { ptr = reg->next; continue; }
 
         // create_fn points to code; the instance pointer is at create_fn + 3 (RIP-rel LEA).
         if (reg->create_fn) {
@@ -270,7 +294,7 @@ static std::optional<SchemaClass> read_class_binding(const Memory& mem,
     const std::string module_name = read_str(mem, binding->module_name);
 
     const std::string name = read_str(mem, binding->name);
-    if (name.empty()) return std::nullopt;
+    if (!is_valid_name(name)) return std::nullopt;
 
     std::optional<std::string> parent_name;
     if (binding->base_classes) {
@@ -279,26 +303,35 @@ static std::optional<SchemaClass> read_class_binding(const Memory& mem,
             auto base_cls = mem.read<SchemaBaseClass>(base_cls_info->class_ptr);
             if (base_cls) {
                 auto pn = read_str(mem, base_cls->name);
-                if (!pn.empty()) parent_name = std::move(pn);
+                if (is_valid_name(pn)) parent_name = std::move(pn);
             }
         }
     }
 
     // Fields
     std::vector<ClassField> fields;
-    if (binding->fields && binding->field_count > 0) {
-        for (int16_t i = 0; i < binding->field_count; ++i) {
+    const int16_t field_count = binding->field_count;
+    if (binding->fields && field_count > 0 && field_count <= 4096) {
+        for (int16_t i = 0; i < field_count; ++i) {
             uint64_t field_addr = binding->fields + static_cast<uint64_t>(i) * sizeof(SchemaClassFieldData);
             auto field = mem.read<SchemaClassFieldData>(field_addr);
-            if (!field || !field->type) continue;
+            if (!field) continue;
+
+            // Skip garbage entries: bad offset or missing name pointer.
+            if (!is_valid_offset(field->offset)) continue;
 
             const std::string fname = read_str(mem, field->name);
-            auto type_obj = mem.read<SchemaType>(field->type);
-            std::string type_name;
-            if (type_obj) type_name = read_str(mem, type_obj->name);
+            if (!is_valid_name(fname)) continue;
 
-            // Strip spaces from type name.
-            type_name.erase(std::remove(type_name.begin(), type_name.end(), ' '), type_name.end());
+            std::string type_name;
+            if (field->type) {
+                auto type_obj = mem.read<SchemaType>(field->type);
+                if (type_obj) {
+                    type_name = read_str(mem, type_obj->name);
+                    type_name.erase(std::remove(type_name.begin(), type_name.end(), ' '), type_name.end());
+                    if (!is_valid_type_name(type_name)) type_name.clear();
+                }
+            }
 
             fields.push_back({ fname, type_name, field->offset });
         }
@@ -342,21 +375,23 @@ static std::optional<SchemaEnum> read_enum_binding(const Memory& mem, uint64_t b
     if (!binding) return std::nullopt;
 
     const std::string name = read_str(mem, binding->name);
-    if (name.empty()) return std::nullopt;
+    if (!is_valid_name(name)) return std::nullopt;
 
     std::vector<EnumMember> members;
-    if (binding->enumerators && binding->enumerator_count > 0) {
-        for (uint16_t i = 0; i < binding->enumerator_count; ++i) {
+    const uint16_t enum_count = binding->enumerator_count;
+    if (binding->enumerators && enum_count > 0 && enum_count <= 4096) {
+        for (uint16_t i = 0; i < enum_count; ++i) {
             uint64_t enum_addr = binding->enumerators + i * sizeof(SchemaEnumeratorInfoData);
             auto enumerator = mem.read<SchemaEnumeratorInfoData>(enum_addr);
             if (!enumerator) continue;
 
             const std::string mname = read_str(mem, enumerator->name);
+            if (!is_valid_name(mname)) continue;
             members.push_back({ mname, static_cast<int64_t>(enumerator->value) });
         }
     }
 
-    return SchemaEnum{ name, binding->alignment, binding->enumerator_count, members };
+    return SchemaEnum{ name, binding->alignment, static_cast<uint16_t>(members.size()), members };
 }
 
 // Walk a UtlTsHash and return all non-null data pointers.

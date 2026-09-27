@@ -1,5 +1,5 @@
 // Generated using deadlock-dumper
-// 2026-09-27T10:33:05Z
+// 2026-09-27T15:22:12Z
 
 #pragma once
 
@@ -8,11 +8,6 @@
 
 namespace deadlock_dumper {
 namespace interfaces {
-
-    // Module: resourcepolicyclient.dll
-    namespace resourcepolicyclient_dll {
-        constexpr std::ptrdiff_t HçÅf = 0xf928;
-    }
 
 } // namespace interfaces
 } // namespace deadlock_dumper

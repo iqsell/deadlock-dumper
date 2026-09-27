@@ -10,12 +10,10 @@
         },
         "CEntityInstance": {
             "fields": {},
-            "parent": "@��\u0001�"
+            "parent": ""
         },
         "CScriptComponent": {
-            "fields": {
-                "": 0
-            },
+            "fields": {},
             "parent": ""
         }
     },

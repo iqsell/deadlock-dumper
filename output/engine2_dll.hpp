@@ -1,5 +1,5 @@
 // Generated using deadlock-dumper
-// 2026-09-27T10:33:05Z
+// 2026-09-27T15:22:12Z
 
 #pragma once
 
@@ -12,7 +12,7 @@ namespace schemas {
     // Module: engine2.dll  classes=4  enums=0
     namespace engine2_dll {
 
-        // Parent: Ú^Áý
+        // Parent: None
         // Fields: 0
         namespace CEntityInstance {
         }
@@ -23,9 +23,8 @@ namespace schemas {
         }
 
         // Parent: None
-        // Fields: 1
+        // Fields: 0
         namespace CScriptComponent {
-            constexpr std::ptrdiff_t  = 0x0; // CEntityComponent
         }
 
         // Parent: None
