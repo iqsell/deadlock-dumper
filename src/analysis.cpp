@@ -150,11 +150,16 @@ static constexpr OffsetEntry kOffsets[] = {
       "48 8B 0D ?? ?? ?? ?? 8B 41",
       3, 7 },
     { "client.dll", "dwLocalPlayerController",
-      "48 8B 05 ?? ?? ?? ?? 48 89 BE",
+      "48 8B 05 ?? ?? ?? ?? 89 9E",   // mov rax,[rip+dwLocalPlayerController]; mov [rsi+X],ebx  (build 6701)
       3, 7 },
-    { "client.dll", "dwLocalPlayerPawn",
-      "48 8B 05 ?? ?? ?? ?? 4C 39 B6",
-      3, 7 },
+    // dwLocalPlayerPawn: build 6701 no longer exposes a standalone RIP-referenced global
+    // for the local pawn (verified against the live client.dll: the pawn pointer only lives
+    // inside runtime structs accessed as [base+off], never as a direct mov reg,[rip+X], and it
+    // is not stored as a CHandle global either). Derive it at runtime instead:
+    //   controller = *(client.dll + dwLocalPlayerController);
+    //   pawnHandle = *(uint32*)(controller + CBasePlayerController::m_hPawn /* 0x6bc */);
+    //   pawn       = entitySystem.GetBaseEntity(pawnHandle & 0x7FFF);
+    // (m_hPawn comes from the dumped client.dll schema; dwEntityList resolves the handle.)
     { "client.dll", "dwViewMatrix",
       "48 8D 0D ?? ?? ?? ?? 48 C1 E0",
       3, 7 },
