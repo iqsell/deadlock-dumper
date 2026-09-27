@@ -214,7 +214,7 @@ OffsetMap dump_offsets(const Memory& mem) {
 
 // ─────────────────────────── Schemas ─────────────────────────────────────
 
-static std::optional<SchemaSystem> find_schema_system(const Memory& mem) {
+static std::optional<uint64_t> find_schema_system_addr(const Memory& mem) {
     auto mod_opt = mem.module_by_name("schemasystem.dll");
     if (!mod_opt) return std::nullopt;
 
@@ -223,14 +223,41 @@ static std::optional<SchemaSystem> find_schema_system(const Memory& mem) {
 
     const auto& buf = *buf_opt;
 
-    // Pattern: 4C 8D 35 ?? ?? ?? ?? 0F 28 45
-    auto match = find_pattern(buf, "4C 8D 35 ?? ?? ?? ?? 0F 28 45");
-    if (!match) return std::nullopt;
+    // Try multiple known patterns for `lea rXX, [rip + SchemaSystem]`
+    static const std::pair<const char*, uint32_t> kPatterns[] = {
+        { "4C 8D 35 ?? ?? ?? ?? 0F 28 45", 3 },   // lea r14, [rip+X]
+        { "48 8D 0D ?? ?? ?? ?? 48 89 ?? ?? ??",  3 }, // lea rcx, [rip+X]
+        { "4C 8D 3D ?? ?? ?? ?? 48 8B",  3 },      // lea r15, [rip+X]
+    };
 
-    auto rva = resolve_rip(buf, *match, 3, 7);
-    if (!rva) return std::nullopt;
+    for (const auto& [pat, disp_off] : kPatterns) {
+        auto match = find_pattern(buf, pat);
+        if (!match) continue;
 
-    return mem.read<SchemaSystem>(mod_opt->base + *rva);
+        auto rva = resolve_rip(buf, *match, disp_off, 7);
+        if (!rva) continue;
+
+        const uint64_t addr = mod_opt->base + *rva;
+        std::cout << "[i] SchemaSystem candidate at schemasystem.dll + 0x"
+                  << std::hex << *rva << std::dec << std::endl;
+        return addr;
+    }
+
+    return std::nullopt;
+}
+
+static std::optional<SchemaSystem> find_schema_system(const Memory& mem) {
+    auto addr = find_schema_system_addr(mem);
+    if (!addr) return std::nullopt;
+
+    auto sys = mem.read<SchemaSystem>(*addr);
+    if (!sys) return std::nullopt;
+
+    // Sanity: count should be small and positive
+    if (sys->type_scopes.count <= 0 || sys->type_scopes.count > 256)
+        return std::nullopt;
+
+    return sys;
 }
 
 static std::optional<SchemaClass> read_class_binding(const Memory& mem,
@@ -240,8 +267,7 @@ static std::optional<SchemaClass> read_class_binding(const Memory& mem,
     auto binding = mem.read<SchemaClassInfoData>(binding_ptr);
     if (!binding) return std::nullopt;
 
-    const std::string module_name =
-        read_str(mem, binding->module_name) + ".dll";
+    const std::string module_name = read_str(mem, binding->module_name);
 
     const std::string name = read_str(mem, binding->name);
     if (name.empty()) return std::nullopt;
@@ -262,9 +288,7 @@ static std::optional<SchemaClass> read_class_binding(const Memory& mem,
     std::vector<ClassField> fields;
     if (binding->fields && binding->field_count > 0) {
         for (int16_t i = 0; i < binding->field_count; ++i) {
-            auto field_ptr = mem.read<uint64_t>(binding->fields + i * sizeof(SchemaClassFieldData));
-            // Direct array: fields + i * sizeof(...)
-            uint64_t field_addr = binding->fields + i * sizeof(SchemaClassFieldData);
+            uint64_t field_addr = binding->fields + static_cast<uint64_t>(i) * sizeof(SchemaClassFieldData);
             auto field = mem.read<SchemaClassFieldData>(field_addr);
             if (!field || !field->type) continue;
 
@@ -340,12 +364,15 @@ static std::vector<uint64_t> utl_ts_hash_elements(const Memory& mem,
                                                    uint64_t hash_addr,
                                                    int32_t blocks_allocated) {
     constexpr size_t BUCKET_COUNT  = 256;
-    constexpr size_t BUCKET_STRIDE = 0x18; // sizeof UtlTsHashBucket
-    constexpr size_t NODE_STRIDE   = 0x18; // sizeof UtlTsHashFixedData (key + next + data)
+    constexpr size_t BUCKET_STRIDE = 0x18;
+    constexpr int32_t MAX_ELEMENTS = 65536; // hard cap
+
+    if (blocks_allocated <= 0 || blocks_allocated > MAX_ELEMENTS)
+        return {};
 
     std::vector<uint64_t> result;
+    result.reserve(static_cast<size_t>(blocks_allocated));
 
-    // Buckets start at hash_addr + 0x60 (after UtlMemoryPool).
     const uint64_t buckets_base = hash_addr + 0x60;
 
     for (size_t b = 0; b < BUCKET_COUNT; ++b) {
@@ -357,15 +384,17 @@ static std::vector<uint64_t> utl_ts_hash_elements(const Memory& mem,
 
         uint64_t node_ptr = *first_uncommitted;
         int visited = 0;
+        const int max_per_bucket = blocks_allocated + 1;
 
-        while (node_ptr && visited < blocks_allocated) {
-            // data pointer is at node + 0x10
+        while (node_ptr && visited < max_per_bucket &&
+               static_cast<int>(result.size()) < blocks_allocated) {
+            // data pointer at node + 0x10
             auto data_ptr = mem.read<uint64_t>(node_ptr + 0x10);
             if (data_ptr && *data_ptr)
                 result.push_back(*data_ptr);
 
             auto next = mem.read<uint64_t>(node_ptr + 0x08);
-            if (!next) break;
+            if (!next || *next == node_ptr) break; // guard against cycles
             node_ptr = *next;
             ++visited;
         }
@@ -379,65 +408,72 @@ SchemaMap dump_schemas(const Memory& mem) {
 
     auto schema_sys = find_schema_system(mem);
     if (!schema_sys) {
-        std::cerr << "[warn] could not locate SchemaSystem\n";
+        std::cerr << "[warn] could not locate SchemaSystem (pattern miss or game not loaded)" << std::endl;
         return result;
     }
 
-    if (schema_sys->registration_count == 0) {
-        std::cerr << "[warn] no schema registrations (game not fully loaded?)\n";
+    std::cout << "[i] SchemaSystem: " << schema_sys->type_scopes.count
+              << " type scopes, " << schema_sys->registration_count
+              << " registrations" << std::endl;
+
+    if (schema_sys->registration_count <= 0) {
+        std::cerr << "[warn] no schema registrations (game not fully loaded?)" << std::endl;
         return result;
     }
 
-    // Iterate type scopes.
     for (int32_t i = 0; i < schema_sys->type_scopes.count; ++i) {
-        uint64_t scope_ptr_addr = schema_sys->type_scopes.data + i * 8;
-        auto scope_ptr = mem.read<uint64_t>(scope_ptr_addr);
-        if (!scope_ptr || !*scope_ptr) continue;
+        try {
+            uint64_t scope_ptr_addr = schema_sys->type_scopes.data + static_cast<uint64_t>(i) * 8;
+            auto scope_ptr = mem.read<uint64_t>(scope_ptr_addr);
+            if (!scope_ptr || !*scope_ptr) continue;
 
-        // Read the name field (offset 0x8, max 256 chars).
-        char scope_name_buf[257]{};
-        mem.read_raw(*scope_ptr + 0x8, scope_name_buf, 256);
-        const std::string scope_name(scope_name_buf);
+            // Name at *scope_ptr + 0x8, 256 bytes max.
+            char scope_name_buf[257]{};
+            mem.read_raw(*scope_ptr + 0x8, scope_name_buf, 256);
+            scope_name_buf[256] = '\0';
+            const std::string scope_name(scope_name_buf);
+            if (scope_name.empty()) continue;
 
-        if (scope_name.empty()) continue;
+            std::cout << "[i] scope " << (i + 1) << "/" << schema_sys->type_scopes.count
+                      << " \"" << scope_name << "\"..." << std::flush;
 
-        // class_bindings hash is at *scope_ptr + 0x0560.
-        const uint64_t class_hash_addr = *scope_ptr + 0x0560;
+            // class_bindings at *scope_ptr + 0x0560.
+            const uint64_t class_hash_addr = *scope_ptr + 0x0560;
+            auto class_blocks = mem.read<int32_t>(class_hash_addr + 0x0C);
+            const int32_t class_count = class_blocks.value_or(0);
 
-        // Read blocks_allocated from UtlMemoryPool (offset 0x0C in the pool).
-        auto class_blocks = mem.read<int32_t>(class_hash_addr + 0x0C);
-        int32_t class_count = class_blocks.value_or(0);
-
-        std::vector<SchemaClass> classes;
-        if (class_count > 0) {
-            auto ptrs = utl_ts_hash_elements(mem, class_hash_addr, class_count);
-            for (uint64_t ptr : ptrs) {
-                auto cls = read_class_binding(mem, ptr);
-                if (cls) classes.push_back(std::move(*cls));
+            std::vector<SchemaClass> classes;
+            if (class_count > 0) {
+                auto ptrs = utl_ts_hash_elements(mem, class_hash_addr, class_count);
+                for (uint64_t ptr : ptrs) {
+                    auto cls = read_class_binding(mem, ptr);
+                    if (cls) classes.push_back(std::move(*cls));
+                }
             }
-        }
 
-        // enum_bindings hash is at *scope_ptr + 0x1DD0.
-        const uint64_t enum_hash_addr = *scope_ptr + 0x1DD0;
-        auto enum_blocks = mem.read<int32_t>(enum_hash_addr + 0x0C);
-        int32_t enum_count = enum_blocks.value_or(0);
+            // enum_bindings at *scope_ptr + 0x1DD0.
+            const uint64_t enum_hash_addr = *scope_ptr + 0x1DD0;
+            auto enum_blocks = mem.read<int32_t>(enum_hash_addr + 0x0C);
+            const int32_t enum_count = enum_blocks.value_or(0);
 
-        std::vector<SchemaEnum> enums;
-        if (enum_count > 0) {
-            auto ptrs = utl_ts_hash_elements(mem, enum_hash_addr, enum_count);
-            for (uint64_t ptr : ptrs) {
-                auto e = read_enum_binding(mem, ptr);
-                if (e) enums.push_back(std::move(*e));
+            std::vector<SchemaEnum> enums;
+            if (enum_count > 0) {
+                auto ptrs = utl_ts_hash_elements(mem, enum_hash_addr, enum_count);
+                for (uint64_t ptr : ptrs) {
+                    auto e = read_enum_binding(mem, ptr);
+                    if (e) enums.push_back(std::move(*e));
+                }
             }
+
+            result[scope_name] = { std::move(classes), std::move(enums) };
+
+            std::cout << " classes=" << result[scope_name].first.size()
+                      << " enums="   << result[scope_name].second.size() << std::endl;
+        } catch (const std::exception& e) {
+            std::cerr << "\n[warn] scope " << i << " error: " << e.what() << std::endl;
+        } catch (...) {
+            std::cerr << "\n[warn] scope " << i << " unknown error" << std::endl;
         }
-
-        // Use scope_name (e.g. "client") + ".dll" as key.
-        const std::string key = scope_name + ".dll";
-        result[key] = { std::move(classes), std::move(enums) };
-
-        std::cout << "[+] scope: " << key
-                  << "  classes=" << result[key].first.size()
-                  << "  enums="   << result[key].second.size() << "\n";
     }
 
     return result;
@@ -448,13 +484,13 @@ SchemaMap dump_schemas(const Memory& mem) {
 DumpResult analyze_all(const Memory& mem) {
     DumpResult result;
 
-    std::cout << "[*] dumping interfaces...\n";
+    std::cout << "[*] dumping interfaces..." << std::endl;
     result.interfaces = dump_interfaces(mem);
 
-    std::cout << "[*] dumping offsets...\n";
+    std::cout << "[*] dumping offsets..." << std::endl;
     result.offsets = dump_offsets(mem);
 
-    std::cout << "[*] dumping schemas...\n";
+    std::cout << "[*] dumping schemas..." << std::endl;
     result.schemas = dump_schemas(mem);
 
     return result;

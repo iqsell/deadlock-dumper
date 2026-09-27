@@ -5,6 +5,7 @@
 #include <chrono>
 #include <fstream>
 #include <iomanip>
+#include <iostream>
 #include <sstream>
 
 #include "json.hpp"
@@ -81,9 +82,16 @@ Output::Output(const fs::path& out_dir,
 // ─────────────────────────── dump_all ────────────────────────────────────
 
 void Output::dump_all(const DumpResult& result) const {
-    dump_interfaces(result.interfaces);
-    dump_offsets(result.offsets);
-    dump_schemas(result.schemas);
+    std::cout << "[*] writing interfaces..." << std::endl;
+    try { dump_interfaces(result.interfaces); } catch (const std::exception& e) { std::cerr << "[-] interfaces error: " << e.what() << std::endl; }
+
+    std::cout << "[*] writing offsets..." << std::endl;
+    try { dump_offsets(result.offsets); } catch (const std::exception& e) { std::cerr << "[-] offsets error: " << e.what() << std::endl; }
+
+    std::cout << "[*] writing schemas (" << result.schemas.size() << " modules)..." << std::endl;
+    try { dump_schemas(result.schemas); } catch (const std::exception& e) { std::cerr << "[-] schemas error: " << e.what() << std::endl; }
+
+    std::cout << "[*] all files written." << std::endl;
 }
 
 // ─────────────────────────── Interfaces ──────────────────────────────────
@@ -112,7 +120,7 @@ std::string Output::interfaces_json(const InterfaceMap& ifaces) const {
     for (const auto& [mod, entries] : ifaces)
         for (const auto& [name, rva] : entries)
             j[mod][name] = rva;
-    return j.dump(m_indent);
+    return j.dump(m_indent, ' ', false, json::error_handler_t::replace);
 }
 
 std::string Output::interfaces_rs(const InterfaceMap& ifaces) const {
@@ -183,7 +191,7 @@ std::string Output::offsets_json(const OffsetMap& offsets) const {
     for (const auto& [mod, entries] : offsets)
         for (const auto& [name, rva] : entries)
             j[mod][name] = rva;
-    return j.dump(m_indent);
+    return j.dump(m_indent, ' ', false, json::error_handler_t::replace);
 }
 
 std::string Output::offsets_rs(const OffsetMap& offsets) const {
@@ -311,7 +319,7 @@ std::string Output::schemas_json(const std::string& /*module*/,
     }
     j["enums"] = j_enums;
 
-    return j.dump(m_indent);
+    return j.dump(m_indent, ' ', false, json::error_handler_t::replace);
 }
 
 std::string Output::schemas_rs(const std::string& module,
@@ -389,8 +397,10 @@ void Output::dump_schemas(const SchemaMap& schemas) const {
     for (const auto& [module, data] : schemas) {
         const auto& [classes, enums] = data;
         const std::string slug = slugify(module);
+        std::cout << "  [~] " << module << " (" << classes.size() << " classes, " << enums.size() << " enums)..." << std::endl;
 
         for (const auto& ext : m_file_types) {
+            try {
             std::string content;
             if      (ext == "hpp")  content = schemas_hpp (module, classes, enums);
             else if (ext == "json") content = schemas_json(module, classes, enums);
@@ -398,6 +408,9 @@ void Output::dump_schemas(const SchemaMap& schemas) const {
             else if (ext == "cs")   content = schemas_cs  (module, classes, enums);
             else continue;
             write_file(slug, ext, content);
+            } catch (const std::exception& e) {
+                std::cerr << "[-] error writing " << slug << "." << ext << ": " << e.what() << std::endl;
+            }
         }
     }
 }

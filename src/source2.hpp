@@ -166,9 +166,10 @@ struct SchemaClassInfoData {
     uint8_t  pad_1[0x8];            // 0x0038
     uint64_t base_classes;          // 0x0040  Pointer64<SchemaBaseClassInfoData>
     uint64_t static_metadata;       // 0x0048  Pointer64<SchemaMetadataEntryData[]>
+    uint8_t  pad_2[0x8];            // 0x0050
     uint64_t type_scope;            // 0x0058
     uint64_t type;                  // 0x0060  Pointer64<SchemaType>
-    uint8_t  pad_2[0x10];           // 0x0068
+    uint8_t  pad_3[0x10];           // 0x0068
 };
 static_assert(sizeof(SchemaClassInfoData) == 0x78);
 
