@@ -1,0 +1,467 @@
+{
+    "classes": {
+        "CBasePulseGraphInstance": {
+            "fields": {},
+            "parent": ""
+        },
+        "CParticleBindingRealPulse": {
+            "fields": {},
+            "parent": "CParticleCollectionBindingInstance"
+        },
+        "CParticleCollectionBindingInstance": {
+            "fields": {},
+            "parent": "CBasePulseGraphInstance"
+        },
+        "CPulseArraylib": {
+            "fields": {},
+            "parent": ""
+        },
+        "CPulseCell_Base": {
+            "fields": {
+                "m_nEditorNodeID": 8
+            },
+            "parent": ""
+        },
+        "CPulseCell_BaseFlow": {
+            "fields": {},
+            "parent": "CPulseCell_Base"
+        },
+        "CPulseCell_BaseLerp": {
+            "fields": {
+                "m_WakeResume": 72
+            },
+            "parent": "CPulseCell_BaseYieldingInflow"
+        },
+        "CPulseCell_BaseLerp::CursorState_t": {
+            "fields": {
+                "m_EndTime": 4,
+                "m_StartTime": 0
+            },
+            "parent": ""
+        },
+        "CPulseCell_BaseRequirement": {
+            "fields": {},
+            "parent": "CPulseCell_Base"
+        },
+        "CPulseCell_BaseState": {
+            "fields": {},
+            "parent": "CPulseCell_BaseYieldingInflow"
+        },
+        "CPulseCell_BaseValue": {
+            "fields": {},
+            "parent": "CPulseCell_Base"
+        },
+        "CPulseCell_BaseYieldingInflow": {
+            "fields": {},
+            "parent": "CPulseCell_BaseFlow"
+        },
+        "CPulseCell_BooleanSwitchState": {
+            "fields": {
+                "m_Condition": 72,
+                "m_SubGraph": 192,
+                "m_WhenFalse": 336,
+                "m_WhenTrue": 264
+            },
+            "parent": "CPulseCell_BaseState"
+        },
+        "CPulseCell_CursorQueue": {
+            "fields": {
+                "m_nCursorsAllowedToRunParallel": 152
+            },
+            "parent": "CPulseCell_WaitForCursorsWithTagBase"
+        },
+        "CPulseCell_FireCursors": {
+            "fields": {
+                "m_OnCanceled": 176,
+                "m_OnFinished": 104,
+                "m_Outflows": 72,
+                "m_bWaitForChildOutflows": 96
+            },
+            "parent": "CPulseCell_BaseYieldingInflow"
+        },
+        "CPulseCell_Inflow_BaseEntrypoint": {
+            "fields": {
+                "m_EntryChunk": 72,
+                "m_RegisterMap": 80
+            },
+            "parent": "CPulseCell_BaseFlow"
+        },
+        "CPulseCell_Inflow_EntOutputHandler": {
+            "fields": {
+                "m_ExpectedParamType": 160,
+                "m_SourceEntity": 128,
+                "m_SourceOutput": 144
+            },
+            "parent": "CPulseCell_Inflow_BaseEntrypoint"
+        },
+        "CPulseCell_Inflow_EventHandler": {
+            "fields": {
+                "m_EventName": 128
+            },
+            "parent": "CPulseCell_Inflow_BaseEntrypoint"
+        },
+        "CPulseCell_Inflow_GraphHook": {
+            "fields": {
+                "m_HookName": 128
+            },
+            "parent": "CPulseCell_Inflow_BaseEntrypoint"
+        },
+        "CPulseCell_Inflow_Method": {
+            "fields": {
+                "m_Args": 184,
+                "m_Description": 144,
+                "m_MethodName": 128,
+                "m_ReturnType": 160,
+                "m_bIsPublic": 152
+            },
+            "parent": "CPulseCell_Inflow_BaseEntrypoint"
+        },
+        "CPulseCell_Inflow_ObservableVariableListener": {
+            "fields": {
+                "m_bSelfReference": 130,
+                "m_nBlackboardReference": 128
+            },
+            "parent": "CPulseCell_Inflow_BaseEntrypoint"
+        },
+        "CPulseCell_Inflow_Wait": {
+            "fields": {
+                "m_WakeResume": 72
+            },
+            "parent": "CPulseCell_BaseYieldingInflow"
+        },
+        "CPulseCell_Inflow_Yield": {
+            "fields": {
+                "m_UnyieldResume": 72
+            },
+            "parent": "CPulseCell_BaseYieldingInflow"
+        },
+        "CPulseCell_InlineNodeSkipSelector": {
+            "fields": {
+                "m_FailOutflow": 104,
+                "m_PassOutflow": 80,
+                "m_bAnd": 76,
+                "m_nFlowNodeID": 72
+            },
+            "parent": "CPulseCell_BaseFlow"
+        },
+        "CPulseCell_IntervalTimer": {
+            "fields": {
+                "m_Completed": 72,
+                "m_OnInterval": 144
+            },
+            "parent": "CPulseCell_BaseYieldingInflow"
+        },
+        "CPulseCell_IntervalTimer::CursorState_t": {
+            "fields": {
+                "m_EndTime": 4,
+                "m_StartTime": 0,
+                "m_bCompleteOnNextWake": 16,
+                "m_flWaitInterval": 8,
+                "m_flWaitIntervalHigh": 12
+            },
+            "parent": ""
+        },
+        "CPulseCell_IsRequirementValid": {
+            "fields": {},
+            "parent": "CPulseCell_BaseRequirement"
+        },
+        "CPulseCell_IsRequirementValid::Criteria_t": {
+            "fields": {
+                "m_bIsValid": 0
+            },
+            "parent": ""
+        },
+        "CPulseCell_LimitCount": {
+            "fields": {
+                "m_nLimitCount": 72
+            },
+            "parent": "CPulseCell_BaseRequirement"
+        },
+        "CPulseCell_LimitCount::Criteria_t": {
+            "fields": {
+                "m_bLimitCountPasses": 0
+            },
+            "parent": ""
+        },
+        "CPulseCell_LimitCount::InstanceState_t": {
+            "fields": {
+                "m_nCurrentCount": 0
+            },
+            "parent": ""
+        },
+        "CPulseCell_Outflow_CycleOrdered": {
+            "fields": {
+                "m_Outputs": 72
+            },
+            "parent": "CPulseCell_BaseFlow"
+        },
+        "CPulseCell_Outflow_CycleOrdered::InstanceState_t": {
+            "fields": {
+                "m_nNextIndex": 0
+            },
+            "parent": ""
+        },
+        "CPulseCell_Outflow_CycleRandom": {
+            "fields": {
+                "m_Outputs": 72
+            },
+            "parent": "CPulseCell_BaseFlow"
+        },
+        "CPulseCell_Outflow_CycleShuffled": {
+            "fields": {
+                "m_Outputs": 72
+            },
+            "parent": "CPulseCell_BaseFlow"
+        },
+        "CPulseCell_Outflow_CycleShuffled::InstanceState_t": {
+            "fields": {
+                "m_Shuffle": 0,
+                "m_nNextShuffle": 32
+            },
+            "parent": ""
+        },
+        "CPulseCell_PickBestOutflowSelector": {
+            "fields": {
+                "m_OutflowList": 80,
+                "m_nCheckType": 72
+            },
+            "parent": "CPulseCell_BaseFlow"
+        },
+        "CPulseCell_Step_CallExternalMethod": {
+            "fields": {
+                "m_ExpectedArgs": 104,
+                "m_GameBlackboard": 88,
+                "m_MethodName": 72,
+                "m_OnFinished": 128,
+                "m_nAsyncCallMode": 120
+            },
+            "parent": "CPulseCell_BaseYieldingInflow"
+        },
+        "CPulseCell_Step_DebugLog": {
+            "fields": {},
+            "parent": "CPulseCell_BaseFlow"
+        },
+        "CPulseCell_Step_PublicOutput": {
+            "fields": {
+                "m_OutputIndex": 72
+            },
+            "parent": "CPulseCell_BaseFlow"
+        },
+        "CPulseCell_Timeline": {
+            "fields": {
+                "m_OnCanceled": 176,
+                "m_OnFinished": 104,
+                "m_TimelineEvents": 72,
+                "m_bWaitForChildOutflows": 96
+            },
+            "parent": "CPulseCell_BaseYieldingInflow"
+        },
+        "CPulseCell_Timeline::TimelineEvent_t": {
+            "fields": {
+                "m_EventOutflow": 8,
+                "m_flTimeFromPrevious": 0
+            },
+            "parent": ""
+        },
+        "CPulseCell_Unknown": {
+            "fields": {
+                "m_UnknownKeys": 72
+            },
+            "parent": "CPulseCell_Base"
+        },
+        "CPulseCell_Value_Curve": {
+            "fields": {
+                "m_Curve": 72
+            },
+            "parent": "CPulseCell_BaseValue"
+        },
+        "CPulseCell_Value_Gradient": {
+            "fields": {
+                "m_Gradient": 72
+            },
+            "parent": "CPulseCell_BaseValue"
+        },
+        "CPulseCell_Value_RandomFloat": {
+            "fields": {},
+            "parent": "CPulseCell_BaseValue"
+        },
+        "CPulseCell_Value_RandomInt": {
+            "fields": {},
+            "parent": "CPulseCell_BaseValue"
+        },
+        "CPulseCell_WaitForCursorsWithTag": {
+            "fields": {
+                "m_bTagSelfWhenComplete": 152,
+                "m_nDesiredKillPriority": 156
+            },
+            "parent": "CPulseCell_WaitForCursorsWithTagBase"
+        },
+        "CPulseCell_WaitForCursorsWithTagBase": {
+            "fields": {
+                "m_WaitComplete": 80,
+                "m_nCursorsAllowedToWait": 72
+            },
+            "parent": "CPulseCell_BaseYieldingInflow"
+        },
+        "CPulseCell_WaitForCursorsWithTagBase::CursorState_t": {
+            "fields": {
+                "m_TagName": 0
+            },
+            "parent": ""
+        },
+        "CPulseCell_WaitForObservable": {
+            "fields": {
+                "m_Condition": 72,
+                "m_OnTrue": 192
+            },
+            "parent": "CPulseCell_BaseYieldingInflow"
+        },
+        "CPulseCursorFuncs": {
+            "fields": {},
+            "parent": ""
+        },
+        "CPulseExecCursor": {
+            "fields": {},
+            "parent": ""
+        },
+        "CPulseGraphDef": {
+            "fields": {
+                "m_BlackboardReferences": 272,
+                "m_CallInfos": 200,
+                "m_Cells": 104,
+                "m_Chunks": 80,
+                "m_Constants": 224,
+                "m_DomainIdentifier": 8,
+                "m_DomainSubType": 24,
+                "m_DomainValues": 248,
+                "m_InvokeBindings": 176,
+                "m_OutputConnections": 296,
+                "m_ParentMapName": 48,
+                "m_ParentXmlName": 64,
+                "m_PublicOutputs": 152,
+                "m_Vars": 128
+            },
+            "parent": ""
+        },
+        "CPulseMathlib": {
+            "fields": {},
+            "parent": ""
+        },
+        "CPulseTestScriptLib": {
+            "fields": {},
+            "parent": ""
+        },
+        "CPulse_BlackboardReference": {
+            "fields": {
+                "m_BlackboardResource": 8,
+                "m_NodeName": 32,
+                "m_hBlackboardResource": 0,
+                "m_nNodeID": 24
+            },
+            "parent": ""
+        },
+        "CPulse_CallInfo": {
+            "fields": {
+                "m_CallMethodID": 72,
+                "m_PortName": 0,
+                "m_RegisterMap": 24,
+                "m_nEditorNodeID": 16,
+                "m_nSrcChunk": 76,
+                "m_nSrcInstruction": 80
+            },
+            "parent": ""
+        },
+        "CPulse_InvokeBinding": {
+            "fields": {
+                "m_FuncName": 48,
+                "m_RegisterMap": 0,
+                "m_nCellIndex": 64,
+                "m_nSrcChunk": 68,
+                "m_nSrcInstruction": 72
+            },
+            "parent": ""
+        },
+        "CPulse_OutflowConnection": {
+            "fields": {
+                "m_OutflowRegisterMap": 24,
+                "m_SourceOutflowName": 0,
+                "m_nDestChunk": 16,
+                "m_nInstruction": 20
+            },
+            "parent": ""
+        },
+        "CPulse_ResumePoint": {
+            "fields": {},
+            "parent": "CPulse_OutflowConnection"
+        },
+        "OutflowWithRequirements_t": {
+            "fields": {
+                "m_Connection": 0,
+                "m_DestinationFlowNodeID": 72,
+                "m_RequirementNodeIDs": 80,
+                "m_nCursorStateBlockIndex": 104
+            },
+            "parent": ""
+        },
+        "PulseNodeDynamicOutflows_t": {
+            "fields": {
+                "m_Outflows": 0
+            },
+            "parent": ""
+        },
+        "PulseNodeDynamicOutflows_t::DynamicOutflow_t": {
+            "fields": {
+                "m_Connection": 8,
+                "m_OutflowID": 0
+            },
+            "parent": ""
+        },
+        "PulseObservableBoolExpression_t": {
+            "fields": {
+                "m_DependentObservableBlackboardReferences": 96,
+                "m_DependentObservableVars": 72,
+                "m_EvaluateConnection": 0
+            },
+            "parent": ""
+        },
+        "PulseSelectorOutflowList_t": {
+            "fields": {
+                "m_Outflows": 0
+            },
+            "parent": ""
+        },
+        "SignatureOutflow_Continue": {
+            "fields": {},
+            "parent": "CPulse_OutflowConnection"
+        },
+        "SignatureOutflow_Resume": {
+            "fields": {},
+            "parent": "CPulse_ResumePoint"
+        }
+    },
+    "enums": {
+        "PulseBestOutflowRules_t": {
+            "alignment": 4,
+            "members": {
+                "SORT_BY_NUMBER_OF_VALID_CRITERIA": 0,
+                "SORT_BY_OUTFLOW_INDEX": 1
+            }
+        },
+        "PulseCursorCancelPriority_t": {
+            "alignment": 4,
+            "members": {
+                "CancelOnSucceeded": 1,
+                "HardCancel": 3,
+                "None": 0,
+                "SoftCancel": 2
+            }
+        },
+        "PulseMethodCallMode_t": {
+            "alignment": 4,
+            "members": {
+                "ASYNC_FIRE_AND_FORGET": 1,
+                "SYNC_WAIT_FOR_COMPLETION": 0
+            }
+        }
+    }
+}
