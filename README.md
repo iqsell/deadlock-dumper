@@ -1,7 +1,6 @@
 # deadlock-dumper
 
 External offset/interface/schema dumper for **Deadlock** (Valve, Source 2).  
-Inspired by [cs2-dumper](https://github.com/a2x/cs2-dumper).  
 Windows only. Reads process memory via `ReadProcessMemory` — no kernel drivers required.
 
 ## What it dumps
