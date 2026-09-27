@@ -1,0 +1,426 @@
+{
+    "classes": {
+        "CBasePulseGraphInstance": {
+            "fields": {},
+            "parent": ""
+        },
+        "CParticleBindingRealPulse": {
+            "fields": {
+                "": -1274528880,
+                "particleslib": 197119
+            },
+            "parent": ""
+        },
+        "CParticleCollectionBindingInstance": {
+            "fields": {
+                "": 0
+            },
+            "parent": ""
+        },
+        "CPulseArraylib": {
+            "fields": {},
+            "parent": ""
+        },
+        "CPulseCell_Base": {
+            "fields": {},
+            "parent": "m_StartTime"
+        },
+        "CPulseCell_BaseFlow": {
+            "fields": {
+                "": -1274477232
+            },
+            "parent": ""
+        },
+        "CPulseCell_BaseLerp": {
+            "fields": {
+                "": -1274475600,
+                "pulse_runtime_lib": 262655
+            },
+            "parent": ""
+        },
+        "CPulseCell_BaseLerp::CursorState_t": {
+            "fields": {},
+            "parent": ""
+        },
+        "CPulseCell_BaseRequirement": {
+            "fields": {
+                "": -1274477104
+            },
+            "parent": ""
+        },
+        "CPulseCell_BaseState": {
+            "fields": {
+                "": -1274466288,
+                "pulse_runtime_lib": 262655
+            },
+            "parent": "\u0010\u000b\t��"
+        },
+        "CPulseCell_BaseValue": {
+            "fields": {
+                "": -1274475136
+            },
+            "parent": "�Pw\u001f�"
+        },
+        "CPulseCell_BaseYieldingInflow": {
+            "fields": {
+                "": -1274475760,
+                "pulse_runtime_lib": 197119
+            },
+            "parent": "�Pw\u001f�"
+        },
+        "CPulseCell_BooleanSwitchState": {
+            "fields": {
+                "": -1274466000,
+                "pulse_runtime_lib": 327944,
+                "�Pw\u001f�": -1276112272
+            },
+            "parent": "{ className = 'IsStateNode' item_factory = 'BooleanSwitchState' }"
+        },
+        "CPulseCell_CursorQueue": {
+            "fields": {
+                "": 0,
+                "CPulseCell_CursorQueue": 160,
+                "�\u0019���": 0,
+                "�Lw\u001f�": 262497
+            },
+            "parent": "tools/images/pulse_editor/cursor_wait_zone.png"
+        },
+        "CPulseCell_FireCursors": {
+            "fields": {
+                "": -1274470016,
+                "pulse_runtime_lib": 262408
+            },
+            "parent": ""
+        },
+        "CPulseCell_Inflow_BaseEntrypoint": {
+            "fields": {
+                "": -1274476912,
+                "pulse_runtime_lib": 196872
+            },
+            "parent": ""
+        },
+        "CPulseCell_Inflow_EntOutputHandler": {
+            "fields": {
+                "": -1274476080,
+                "pulse_runtime_lib": 262408
+            },
+            "parent": ""
+        },
+        "CPulseCell_Inflow_EventHandler": {
+            "fields": {
+                "": -1274476464,
+                "pulse_runtime_lib": 262408
+            },
+            "parent": ""
+        },
+        "CPulseCell_Inflow_GraphHook": {
+            "fields": {
+                "": -1274476304,
+                "pulse_runtime_lib": 262408
+            },
+            "parent": ""
+        },
+        "CPulseCell_Inflow_Method": {
+            "fields": {
+                "": -1274476624,
+                "pulse_runtime_lib": 262408
+            },
+            "parent": ""
+        },
+        "CPulseCell_Inflow_ObservableVariableListener": {
+            "fields": {
+                "": -1274475888,
+                "pulse_runtime_lib": 262408
+            },
+            "parent": ""
+        },
+        "CPulseCell_Inflow_Wait": {
+            "fields": {
+                "": 0,
+                "CPulseCell_Inflow_Wait": 144,
+                "�����": 0
+            },
+            "parent": "tools/images/pulse_editor/inflow_wait.png"
+        },
+        "CPulseCell_Inflow_Yield": {
+            "fields": {
+                "": 0,
+                "CPulseCell_Inflow_Yield": 144,
+                "`����": 0
+            },
+            "parent": ""
+        },
+        "CPulseCell_InlineNodeSkipSelector": {
+            "fields": {
+                "": -1274514256,
+                "pulse_runtime_lib": 196872
+            },
+            "parent": ""
+        },
+        "CPulseCell_IntervalTimer": {
+            "fields": {
+                "": -1274468464,
+                "pulse_runtime_lib": 262408
+            },
+            "parent": "tools/images/pulse_editor/node_timer.png"
+        },
+        "CPulseCell_IntervalTimer::CursorState_t": {
+            "fields": {},
+            "parent": ""
+        },
+        "CPulseCell_IsRequirementValid": {
+            "fields": {
+                "": -1274514656,
+                "pulse_runtime_lib": 196872
+            },
+            "parent": ""
+        },
+        "CPulseCell_IsRequirementValid::Criteria_t": {
+            "fields": {},
+            "parent": ""
+        },
+        "CPulseCell_LimitCount": {
+            "fields": {
+                "": -1274515232,
+                "pulse_runtime_lib": 196872
+            },
+            "parent": "m_nLimitCount"
+        },
+        "CPulseCell_LimitCount::Criteria_t": {
+            "fields": {},
+            "parent": ""
+        },
+        "CPulseCell_LimitCount::InstanceState_t": {
+            "fields": {},
+            "parent": ""
+        },
+        "CPulseCell_Outflow_CycleOrdered": {
+            "fields": {
+                "": 0,
+                "CPulseCell_Outflow_CycleOrdered": 96
+            },
+            "parent": ""
+        },
+        "CPulseCell_Outflow_CycleOrdered::InstanceState_t": {
+            "fields": {},
+            "parent": ""
+        },
+        "CPulseCell_Outflow_CycleRandom": {
+            "fields": {
+                "": -1274479216,
+                "pulse_runtime_lib": 196872
+            },
+            "parent": ""
+        },
+        "CPulseCell_Outflow_CycleShuffled": {
+            "fields": {
+                "": 0,
+                "CPulseCell_Outflow_CycleShuffled": 96
+            },
+            "parent": ""
+        },
+        "CPulseCell_Outflow_CycleShuffled::InstanceState_t": {
+            "fields": {},
+            "parent": ""
+        },
+        "CPulseCell_PickBestOutflowSelector": {
+            "fields": {
+                "": -1274515984,
+                "pulse_runtime_lib": 196872
+            },
+            "parent": "tools/images/pulse_editor/requirements.png"
+        },
+        "CPulseCell_Step_CallExternalMethod": {
+            "fields": {
+                "": -1274477680,
+                "pulse_runtime_lib": 262408
+            },
+            "parent": ""
+        },
+        "CPulseCell_Step_DebugLog": {
+            "fields": {
+                "": 0,
+                "CPulseCell_Step_DebugLog": 72
+            },
+            "parent": "pulse_runtime_lib"
+        },
+        "CPulseCell_Step_PublicOutput": {
+            "fields": {
+                "": -1274474976,
+                "pulse_runtime_lib": 196872
+            },
+            "parent": ""
+        },
+        "CPulseCell_Timeline": {
+            "fields": {
+                "": -1274467152,
+                "pulse_runtime_lib": 262408
+            },
+            "parent": ""
+        },
+        "CPulseCell_Timeline::TimelineEvent_t": {
+            "fields": {},
+            "parent": ""
+        },
+        "CPulseCell_Unknown": {
+            "fields": {
+                "": -1274477360
+            },
+            "parent": ""
+        },
+        "CPulseCell_Value_Curve": {
+            "fields": {
+                "": -1274470992,
+                "pulse_runtime_lib": 196872
+            },
+            "parent": "�Mw\u001f�"
+        },
+        "CPulseCell_Value_Gradient": {
+            "fields": {
+                "": -1274469632,
+                "pulse_runtime_lib": 196872
+            },
+            "parent": "�Mw\u001f�"
+        },
+        "CPulseCell_Value_RandomFloat": {
+            "fields": {
+                "": -1274478288,
+                "pulse_runtime_lib": 196872
+            },
+            "parent": "tools/images/pulse_editor/exit_cycle_random.png"
+        },
+        "CPulseCell_Value_RandomInt": {
+            "fields": {
+                "": 0,
+                "CPulseCell_Value_RandomInt": 72
+            },
+            "parent": "tools/images/pulse_editor/exit_cycle_random.png"
+        },
+        "CPulseCell_WaitForCursorsWithTag": {
+            "fields": {
+                "": -1274464176,
+                "pulse_runtime_lib": 327944,
+                "�Pw\u001f�": -1276094912
+            },
+            "parent": "tools/images/pulse_editor/cursor_tag.png"
+        },
+        "CPulseCell_WaitForCursorsWithTagBase": {
+            "fields": {
+                "": -1274464560,
+                "pulse_runtime_lib": 262408
+            },
+            "parent": "m_nCursorsAllowedToWait"
+        },
+        "CPulseCell_WaitForCursorsWithTagBase::CursorState_t": {
+            "fields": {},
+            "parent": ""
+        },
+        "CPulseCell_WaitForObservable": {
+            "fields": {
+                "": -1274466592,
+                "pulse_runtime_lib": 262408
+            },
+            "parent": ""
+        },
+        "CPulseCursorFuncs": {
+            "fields": {},
+            "parent": ""
+        },
+        "CPulseExecCursor": {
+            "fields": {},
+            "parent": ""
+        },
+        "CPulseGraphDef": {
+            "fields": {},
+            "parent": ""
+        },
+        "CPulseMathlib": {
+            "fields": {},
+            "parent": ""
+        },
+        "CPulseTestScriptLib": {
+            "fields": {},
+            "parent": ""
+        },
+        "CPulse_BlackboardReference": {
+            "fields": {},
+            "parent": ""
+        },
+        "CPulse_CallInfo": {
+            "fields": {},
+            "parent": ""
+        },
+        "CPulse_InvokeBinding": {
+            "fields": {},
+            "parent": ""
+        },
+        "CPulse_OutflowConnection": {
+            "fields": {},
+            "parent": ""
+        },
+        "CPulse_ResumePoint": {
+            "fields": {
+                "": 0
+            },
+            "parent": ""
+        },
+        "OutflowWithRequirements_t": {
+            "fields": {},
+            "parent": ""
+        },
+        "PulseNodeDynamicOutflows_t": {
+            "fields": {},
+            "parent": ""
+        },
+        "PulseNodeDynamicOutflows_t::DynamicOutflow_t": {
+            "fields": {},
+            "parent": ""
+        },
+        "PulseObservableBoolExpression_t": {
+            "fields": {},
+            "parent": ""
+        },
+        "PulseSelectorOutflowList_t": {
+            "fields": {},
+            "parent": ""
+        },
+        "SignatureOutflow_Continue": {
+            "fields": {
+                "": 0
+            },
+            "parent": ""
+        },
+        "SignatureOutflow_Resume": {
+            "fields": {
+                "": 0,
+                "SignatureOutflow_Resume": 72
+            },
+            "parent": ""
+        }
+    },
+    "enums": {
+        "PulseBestOutflowRules_t": {
+            "alignment": 4,
+            "members": {
+                "SORT_BY_NUMBER_OF_VALID_CRITERIA": 0,
+                "SORT_BY_OUTFLOW_INDEX": 1
+            }
+        },
+        "PulseCursorCancelPriority_t": {
+            "alignment": 4,
+            "members": {
+                "CancelOnSucceeded": 1,
+                "HardCancel": 3,
+                "None": 0,
+                "SoftCancel": 2
+            }
+        },
+        "PulseMethodCallMode_t": {
+            "alignment": 4,
+            "members": {
+                "ASYNC_FIRE_AND_FORGET": 1,
+                "SYNC_WAIT_FOR_COMPLETION": 0
+            }
+        }
+    }
+}

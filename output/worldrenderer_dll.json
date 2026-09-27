@@ -1,0 +1,23 @@
+{
+    "classes": {
+        "CEntityComponent": {
+            "fields": {},
+            "parent": ""
+        },
+        "CEntityIdentity": {
+            "fields": {},
+            "parent": ""
+        },
+        "CEntityInstance": {
+            "fields": {},
+            "parent": "@��\u0001�"
+        },
+        "CScriptComponent": {
+            "fields": {
+                "": 0
+            },
+            "parent": ""
+        }
+    },
+    "enums": {}
+}
