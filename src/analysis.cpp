@@ -91,31 +91,60 @@ static std::map<std::string, uint64_t> read_interface_list(const Memory&   mem,
     return result;
 }
 
+// Resolve the RVA of an export by name from the PE export directory (module image in `buf`).
+static std::optional<uint32_t> find_export_rva(std::span<const uint8_t> buf, const char* export_name) {
+    auto u32 = [&](size_t o) -> uint32_t {
+        uint32_t v = 0; if (o + 4 <= buf.size()) std::memcpy(&v, buf.data() + o, 4); return v; };
+    if (buf.size() < 0x200 || buf[0] != 'M' || buf[1] != 'Z') return std::nullopt;
+    const uint32_t nt = u32(0x3C);
+    if (u32(nt) != 0x00004550) return std::nullopt;
+    const uint32_t exp_rva = u32(nt + 0x88); // OptionalHeader.DataDirectory[0] (PE32+)
+    if (!exp_rva) return std::nullopt;
+    const uint32_t count = u32(exp_rva + 0x18);
+    const uint32_t funcs = u32(exp_rva + 0x1C), names = u32(exp_rva + 0x20), ords = u32(exp_rva + 0x24);
+    for (uint32_t i = 0; i < count && i < 65536; ++i) {
+        const uint32_t name_rva = u32(names + i * 4);
+        if (!name_rva || name_rva >= buf.size()) continue;
+        if (std::strncmp(reinterpret_cast<const char*>(buf.data() + name_rva), export_name, 64) != 0) continue;
+        uint16_t ord = 0; std::memcpy(&ord, buf.data() + ords + i * 2, 2);
+        return u32(funcs + ord * 4);
+    }
+    return std::nullopt;
+}
+
 InterfaceMap dump_interfaces(const Memory& mem) {
     InterfaceMap result;
 
     for (const auto& mod : mem.module_list()) {
+        // Only game modules (skip system DLLs) -- they live next to the game exe.
         auto buf_opt = mem.read_module(mod);
         if (!buf_opt) continue;
-
         const auto& buf = *buf_opt;
 
-        // Look for the "CreateInterface" export in the PE.
-        // Quick search: find the pattern that loads s_pInterfaceRegs.
-        // Pattern: 48 8B 0D ?? ?? ?? ?? (mov rcx, [rip+X]) near CreateInterface export.
-        auto match = find_pattern(buf, "48 8B 0D ?? ?? ?? ??");
-        if (!match) continue;
+        const auto exp = find_export_rva(buf, "CreateInterface");
+        if (!exp || *exp >= buf.size()) continue;
 
-        auto rva = resolve_rip(buf, *match, 3, 7);
-        if (!rva) continue;
+        // CreateInterface body: mov rbx/rsi/rdi/r?, [rip + s_pInterfaceRegs] within the first 0x60 bytes.
+        const size_t fn_len = std::min<size_t>(0x60, buf.size() - *exp);
+        std::optional<uint64_t> list_head_ptr_addr;
+        for (size_t i = 0; i + 7 <= fn_len; ++i) {
+            const uint8_t* b = buf.data() + *exp + i;
+            if ((b[0] == 0x48 || b[0] == 0x4C) && b[1] == 0x8B && (b[2] & 0xC7) == 0x05) {
+                int32_t rel; std::memcpy(&rel, b + 3, 4);
+                list_head_ptr_addr = mod.base + *exp + i + 7 + rel;
+                break;
+            }
+        }
+        if (!list_head_ptr_addr) continue;
 
-        // Read the pointer stored at that RVA (head of the linked list).
-        auto list_head_addr = mem.read<uint64_t>(mod.base + *rva);
-        if (!list_head_addr || !*list_head_addr) continue;
+        auto list_head = mem.read<uint64_t>(*list_head_ptr_addr);
+        if (!list_head || !*list_head) continue;
 
-        auto ifaces = read_interface_list(mem, mod, *list_head_addr);
-        if (!ifaces.empty())
+        auto ifaces = read_interface_list(mem, mod, *list_head);
+        if (!ifaces.empty()) {
+            std::cout << "[+] " << mod.name << ": " << ifaces.size() << " interfaces\n";
             result[mod.name] = std::move(ifaces);
+        }
     }
 
     return result;
@@ -231,6 +260,20 @@ OffsetMap dump_offsets(const Memory& mem) {
             std::cerr << "[warn] rip resolution failed for: " << entry.name << "\n";
             continue;
         }
+
+        // Ambiguity check: a second hit means first-match may be a false positive.
+        {
+            const uint32_t next = *match + 1;
+            if (next < mc.buf.size()) {
+                auto second = find_pattern(std::span<const uint8_t>(mc.buf).subspan(next), entry.pattern);
+                if (second)
+                    std::cerr << "[warn] pattern for " << entry.name
+                              << " is NOT unique (2nd hit at +0x" << std::hex << (next + *second)
+                              << std::dec << ") - verify the value\n";
+            }
+        }
+        if (*rva >= mc.buf.size())
+            std::cerr << "[warn] " << entry.name << " resolves outside module image\n";
 
         result[mod_name][entry.name] = *rva;
 

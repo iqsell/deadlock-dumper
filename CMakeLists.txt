@@ -22,6 +22,7 @@ add_executable(deadlock-dumper
     src/patterns.cpp
 )
 
+target_compile_definitions(deadlock-dumper PRIVATE NOMINMAX)
 target_include_directories(deadlock-dumper PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/src

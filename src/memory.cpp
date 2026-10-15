@@ -50,7 +50,18 @@ std::optional<std::string> Memory::read_string(uint64_t address, size_t max_len)
 
 std::optional<std::vector<uint8_t>> Memory::read_module(const ModuleInfo& mod) const {
     std::vector<uint8_t> buf(mod.size);
-    if (!read_raw(mod.base, buf.data(), mod.size))
+    constexpr size_t kChunk = 0x10000;
+    size_t ok_bytes = 0;
+    for (size_t off = 0; off < mod.size; off += kChunk) {
+        const size_t n = std::min<size_t>(kChunk, mod.size - off);
+        if (read_raw(mod.base + off, buf.data() + off, n)) { ok_bytes += n; continue; }
+        // fall back to 4 KiB pages; unreadable pages stay zeroed
+        for (size_t p = 0; p < n; p += 0x1000) {
+            const size_t pn = std::min<size_t>(0x1000, n - p);
+            if (read_raw(mod.base + off + p, buf.data() + off + p, pn)) ok_bytes += pn;
+        }
+    }
+    if (ok_bytes == 0)
         return std::nullopt;
     return buf;
 }
